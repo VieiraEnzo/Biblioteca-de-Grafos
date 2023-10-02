@@ -39,7 +39,7 @@ class graph{
         //retorna o numero de componetes, o tamanho de cada e a lista de vértices que participam dele
         void componentes_conexas();
         
-        //FUNCIONANDO!!!
+        
         //escreve em um arquivo o numero de vertices, numero de arestas, grau min, grau max, grau medio e mediana do grau
         void escrever_grafo();
 
@@ -74,8 +74,8 @@ class graph_vetor : public graph{
             this->graph_name = a + "";
             read_graph(a);
         }
-        //FUNCIONANDO!!!!
-        //le o grafo de um arquivo, seta o número de arestas e arestas
+
+
         void read_graph(string filename){
 
             cout << "Lendo grafo" << endl;
@@ -83,7 +83,7 @@ class graph_vetor : public graph{
             string line;
             file.open(filename, ios::in);
 
-            //seta as informações básicas e gera o gráfico
+
             if(file.is_open())
             {   
 
@@ -106,9 +106,7 @@ class graph_vetor : public graph{
 
         }
 
-        //FUNCIONANDO
-        //Realiza busca a partir de um vértice informado, retorna a árvore gerada (por meio do pai)
-        //assim como o nível de cada vértice da árvore (raiz é 0). Escrevendo em um arquivo;
+
         void bfs(int v){
                 cout << "Iniciando bfs: O(n+m)" << endl;
                 //roda a bfs
@@ -212,8 +210,7 @@ class graph_vetor : public graph{
 
         }
 
-        //FUNCIONANDO!!!
-        //calcula a distancia entre 2 vértices do grafo
+
         int distancia(int v1, int v2){
             bfs(v1);
             string line;
@@ -232,8 +229,7 @@ class graph_vetor : public graph{
             return INF;
         }
 
-        //FUNCIONANDO!!!
-        //calcula o diametro do grafo
+
         int calc_diametro(){
             
             for(int i = 1; i < num_vertices; i++){
@@ -261,8 +257,7 @@ class graph_vetor : public graph{
             return this->diametro;
         }
         
-        //FUNCIONANDO!!!
-        //retorna o numero de componetes, o tamanho de cada e a lista de vértices que participam dele
+
         void componentes_conexas(){
             vector<bool> visitado(num_vertices, false);
             for(int i = 1; i < num_vertices; i++){
@@ -290,8 +285,7 @@ class graph_vetor : public graph{
 
         }
 
-        //FUNCIONANDO!!!
-        //gera grau min, grau max, grau medio e mediana do grau
+
         void create_degree(){
             
             vector<int> graus;
@@ -353,7 +347,7 @@ class graph_matrix : public graph{
             read_graph(a);
         }
 
-        //le o grafo de um arquivo, seta o número de arestas e arestas
+
         void read_graph(string filename){
 
             cout << "Lendo grafo" << endl;
@@ -361,7 +355,6 @@ class graph_matrix : public graph{
             string line;
             file.open(filename, ios::in);
 
-            //seta as informações básicas e gera o gráfico
             if(file.is_open())
             {   
                 getline(file, line);
@@ -387,8 +380,6 @@ class graph_matrix : public graph{
         }
 
 
-        //Realiza busca a partir de um vértice informado, retorna a árvore gerada (por meio do pai)
-        //assim como o nível de cada vértice da árvore (raiz é 0). Escrevendo em um arquivo;
         void bfs(int v){
                 //roda a bfs
                 vector<bool> visitado(num_vertices,false);
@@ -492,8 +483,6 @@ class graph_matrix : public graph{
         }
 
 
-        //FUNCIONANDO!!!
-        //calcula a distancia entre 2 vértices do grafo
         int distancia(int v1, int v2){
             bfs(v1);
             string line;
@@ -512,8 +501,6 @@ class graph_matrix : public graph{
             return INF;
         }
 
-        //FUNCIONANDO!!!
-        //calcula o diametro do grafo
         int calc_diametro(){
             
             vector<bool> visitado(num_vertices, false);
@@ -542,8 +529,6 @@ class graph_matrix : public graph{
             return this->diametro;
         }
         
-        //FUNCIONANDO!!!
-        //retorna o numero de componetes, o tamanho de cada e a lista de vértices que participam dele
         void componentes_conexas(){
             vector<bool> visitado(num_vertices, false);
             for(int i = 1; i < num_vertices; i++){
@@ -676,7 +661,7 @@ class graph_list : public graph{
 
         }
 
-        //FUNCIONANDO
+
         //Realiza busca a partir de um vértice informado, retorna a árvore gerada (por meio do pai)
         //assim como o nível de cada vértice da árvore (raiz é 0). Escrevendo em um arquivo;
         void bfs(int v){
@@ -753,7 +738,6 @@ class graph_list : public graph{
         }
 
 
-        //FUNCIONANDO!!!
         //calcula a distancia entre 2 vértices do grafo
         int distancia(int v1, int v2){
             bfs(v1);
@@ -773,7 +757,7 @@ class graph_list : public graph{
             return INF;
         }
 
-        //FUNCIONANDO!!!
+        
         //calcula o diametro do grafo
         int calc_diametro(){
             
@@ -836,7 +820,7 @@ class graph_list : public graph{
         }
 
         
-        //FUNCIONANDO!!!
+        
         //retorna o numero de componetes, o tamanho de cada e a lista de vértices que participam dele
         void componentes_conexas(){
             vector<bool> visitado(num_vertices, false);
@@ -865,7 +849,7 @@ class graph_list : public graph{
 
         }
 
-        //FUNCIONANDO!!!
+        
         //gera grau min, grau max, grau medio e mediana do grau
         void create_degree(){
             
@@ -928,20 +912,20 @@ int main()
 
         //Ex 2
         double sum =0;
-        // cout << "RODANDO BFS's" << endl;
-        // for(int j = 1; j <= 100; j ++)
-        // {
-        //     clock_t start_time = clock();
-        //     g1.bfs(j);
-        //     clock_t end_time = clock();
-        //     ofstream file;
-        //     file.open("BFS_TIME_G" + to_string(i) + ".txt", ios_base::app);
-        //     double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
-        //     file << elapsed << "\n";
-        //     sum += elapsed;
-        //     if(j==100){file << "média: "<< (double)sum/(double)100 << "\n";}
-        //     file.close();
-        // }
+        cout << "RODANDO BFS's" << endl;
+        for(int j = 1; j <= 100; j ++)
+        {
+            clock_t start_time = clock();
+            g1.bfs(j);
+            clock_t end_time = clock();
+            ofstream file;
+            file.open("BFS_TIME_G" + to_string(i) + ".txt", ios_base::app);
+            double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
+            file << elapsed << "\n";
+            sum += elapsed;
+            if(j==100){file << "média: "<< (double)sum/(double)100 << "\n";}
+            file.close();
+        }
         
         // //Ex3
         sum = 0;
@@ -962,47 +946,43 @@ int main()
 
 
         // //Ex5
-        // ofstream file;
-        // cout << "Calculando distancias" << endl;
-        // file.open("Distancias" + to_string(i) + ".txt", ios_base::app);
-        // file << "10-20: " << g1.distancia(10,20) << "\n";
-        // file << "10-30: " << g1.distancia(10,30) << "\n";
-        // file << "20-30: " << g1.distancia(20,30) << "\n";
-        // file.close();
+        ofstream file;
+        cout << "Calculando distancias" << endl;
+        file.open("Distancias" + to_string(i) + ".txt", ios_base::app);
+        file << "10-20: " << g1.distancia(10,20) << "\n";
+        file << "10-30: " << g1.distancia(10,30) << "\n";
+        file << "20-30: " << g1.distancia(20,30) << "\n";
+        file.close();
 
 
         // //Ex6 quantas componentes conexas
-        // g1.escrever_grafo();
-        // #pragma omp parallel
-        //  {
-        //     int thread_id = omp_get_thread_num();
-        //     cout << "Hello from thread " << thread_id << endl;
-        // }
+        g1.escrever_grafo();
+        #pragma omp parallel
+         {
+            int thread_id = omp_get_thread_num();
+            cout << "Hello from thread " << thread_id << endl;
+        }
 
         //Ex7 diametro
-        // cout << "Calculando diametro" << endl;
-        // file.open("Diametro" + to_string(i) + ".txt", ios_base::app);
-        // clock_t start_time = clock();
-        // file << g1.calc_diametro() << "\n";
-        // clock_t end_time = clock();
-        // double elapsed = (end_time - start_time) / (double)CLOCKS_PER_SEC;
-        // file << elapsed << "\n";
-        // file.close();
-
-
-
-
+        cout << "Calculando diametro" << endl;
+        file.open("Diametro" + to_string(i) + ".txt", ios_base::app);
+        clock_t start_time = clock();
+        file << g1.calc_diametro() << "\n";
+        clock_t end_time = clock();
+        double elapsed = (end_time - start_time) / (double)CLOCKS_PER_SEC;
+        file << elapsed << "\n";
+        file.close();
 
     }
 
-
-        PROCESS_MEMORY_COUNTERS_EX pmc;
-        GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-        //virtual memory currently used by current process
-        SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
-        //Physical Memory currently used by current process
-        SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-        cout << "memoria usada: "<< physMemUsedByMe << endl;
+        // //Codigo usado para descobrir a memória utilizada
+        // PROCESS_MEMORY_COUNTERS_EX pmc;
+        // GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+        // //virtual memory currently used by current process
+        // SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
+        // //Physical Memory currently used by current process
+        // SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
+        // cout << "memoria usada: "<< physMemUsedByMe << endl;
 
 
 }
