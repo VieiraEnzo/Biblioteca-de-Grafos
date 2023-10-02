@@ -102,6 +102,7 @@ class graph_vetor : public graph{
                 }
                 this->num_arestas++;
             }
+            
             else throw std::invalid_argument( "Impossivel abrir o arquivo" );
 
         }
