@@ -111,7 +111,6 @@ class graph_vetor : public graph{
 
 
         void bfs(int v){
-                cout << "Iniciando bfs: O(n+m)" << endl;
                 //roda a bfs
                 vector<bool> visitado(num_vertices,false);
                 vector<int> pai(num_vertices,-1);
@@ -198,9 +197,6 @@ class graph_vetor : public graph{
                             nivel[vizinho] = nivel[vertice] + 1;
                             pilha.push(vizinho);
                         }
-                        else{
-                            if(vizinho != pai[vertice])
-                        }
                     }
                 }
             }
@@ -236,8 +232,17 @@ class graph_vetor : public graph{
         }
 
 
-        int calc_diametro(){
-            for(int i = 1; i < num_vertices; i++){
+        int calc_diametro(bool aprx = false, int aprox_num = 500){
+            int loop = this->num_vertices;
+            if(aprx) {
+                if(aprox_num > this->num_vertices){
+                    cout << "número de aproximação maior que o número de arestas";
+                    return -1;
+                }
+                loop = aprox_num;
+                }
+            #pragma omp parallel for
+            for(int i = 1; i < loop; i++){
                 vector<bool> visitado(num_vertices, false);
 
                 queue<pair<int,int>> fila;
@@ -262,61 +267,7 @@ class graph_vetor : public graph{
             return this->diametro;
         }
 
-        int calc_diametro2(){
-            isTree();
-
-            for(int k = 0; k < list_comp_conex.size(); k++){
-                if(!tree_comp_conex[k]){
-                    for(int i: list_comp_conex[k]){
-                        vector<bool> visitado(num_vertices, false);
-
-                        queue<pair<int,int>> fila;
-                        fila.push(make_pair(i,0));
-                        visitado[i] = true;
-
-                        while (!fila.empty())
-                        {
-                            int vert = fila.front().first;
-                            int nivel = fila.front().second;
-                            fila.pop();
-
-                            for(int a : arestas[vert]){
-                                if(visitado[a]) continue;
-                                this->diametro = max(this->diametro, nivel+1);
-                                fila.push(make_pair(a,nivel+1));
-                                visitado[a] = true;
-                            }
-                        }
-                    }
-                }
-                else{
-                    stack<int> pilha;
-                } 
-            }
-            for(int i = 1; i < num_vertices; i++){
-                vector<bool> visitado(num_vertices, false);
-
-                queue<pair<int,int>> fila;
-                fila.push(make_pair(i,0));
-                visitado[i] = true;
-
-                while (!fila.empty())
-                {
-                    int vert = fila.front().first;
-                    int nivel = fila.front().second;
-                    fila.pop();
-
-                    for(int a : arestas[vert]){
-                        if(visitado[a]) continue;
-                        this->diametro = max(this->diametro, nivel+1);
-                        fila.push(make_pair(a,nivel+1));
-                        visitado[a] = true;
-                    }
-                }
-
-            }
-            return this->diametro;
-        }
+       
         
 
         void componentes_conexas(){
@@ -344,43 +295,6 @@ class graph_vetor : public graph{
                 }
             }
             // sort(list_comp_conex.rbegin(), list_comp_conex.rend());
-        }
-
-        void isTree(){
-            this->tree_comp_conex.resize(this->list_comp_conex.size(), 1);
-
-            for(int i = 0; i < list_comp_conex.size(); i++){
-                int v = list_comp_conex[i][0];
-                vector<bool> visitado(this->num_vertices, false);
-                vector<int> pai(num_vertices,-1);
-                stack<int> pilha;
-
-
-                pai[v] = v;
-                pilha.push(v);
-
-                while (!pilha.empty()) {
-                    int vertice = pilha.top();
-                    pilha.pop();
-                    if(!visitado[vertice]){
-                        visitado[vertice] = true;
-                        for (int vizinho : arestas[vertice]) {
-                            if (!visitado[vizinho]) {
-                                pai[vizinho] = vertice;
-                                nivel[vizinho] = nivel[vertice] + 1;
-                                pilha.push(vizinho);
-                            }
-                            else{
-                                if(vizinho != pai[vertice]){
-                                    tree_comp_conex[i] = false;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                    if(!tree_comp_conex[i]) break;
-                }
-            }
         }
 
 
@@ -599,10 +513,18 @@ class graph_matrix : public graph{
             return INF;
         }
 
-        int calc_diametro(){
-            
-            vector<bool> visitado(num_vertices, false);
-            for(int i = 1; i < num_vertices; i++){
+        int calc_diametro(bool aprx = false, int aprox_num = 500){
+            int loop = this->num_vertices;
+            if(aprx) {
+                if(aprox_num > this->num_vertices){
+                    cout << "número de aproximação maior que o número de arestas";
+                    return -1;
+                }
+                loop = aprox_num;
+                }
+            vector<bool> visitado(num_vertices);
+            #pragma omp parallel for
+            for(int i = 1; i < loop; i++){
                 
                 fill(visitado.begin(),visitado.end(), false);
                 queue<pair<int,int>> fila;
@@ -857,10 +779,19 @@ class graph_list : public graph{
 
         
         //calcula o diametro do grafo
-        int calc_diametro(){
-            
+        int calc_diametro(bool aprx = false, int aprox_num = 500){
+            int loop = this->num_vertices;
+            if(aprx) 
+            {
+                if(aprox_num > this->num_vertices){
+                    cout << "número de aproximação maior que o número de arestas";
+                    return -1;
+                }
+
+                loop = aprox_num;
+            }
             #pragma omp parallel for
-            for(int i = 1; i < num_vertices; i++){
+            for(int i = 1; i < loop; i++){
                 int di = 0;
                 vector<bool> visitado(num_vertices, false);
 
