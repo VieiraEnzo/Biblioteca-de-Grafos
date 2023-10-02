@@ -60,6 +60,8 @@ class graph{
         double grau_mediana = -1;
 
         vector<vector<int>> list_comp_conex;
+        vector<int> rel_comp_conex;
+        vector<bool> tree_comp_conex;
 
         int diametro = -1;
 
@@ -196,6 +198,9 @@ class graph_vetor : public graph{
                             nivel[vizinho] = nivel[vertice] + 1;
                             pilha.push(vizinho);
                         }
+                        else{
+                            if(vizinho != pai[vertice])
+                        }
                     }
                 }
             }
@@ -232,7 +237,62 @@ class graph_vetor : public graph{
 
 
         int calc_diametro(){
-            
+            for(int i = 1; i < num_vertices; i++){
+                vector<bool> visitado(num_vertices, false);
+
+                queue<pair<int,int>> fila;
+                fila.push(make_pair(i,0));
+                visitado[i] = true;
+
+                while (!fila.empty())
+                {
+                    int vert = fila.front().first;
+                    int nivel = fila.front().second;
+                    fila.pop();
+
+                    for(int a : arestas[vert]){
+                        if(visitado[a]) continue;
+                        this->diametro = max(this->diametro, nivel+1);
+                        fila.push(make_pair(a,nivel+1));
+                        visitado[a] = true;
+                    }
+                }
+
+            }
+            return this->diametro;
+        }
+
+        int calc_diametro2(){
+            isTree();
+
+            for(int k = 0; k < list_comp_conex.size(); k++){
+                if(!tree_comp_conex[k]){
+                    for(int i: list_comp_conex[k]){
+                        vector<bool> visitado(num_vertices, false);
+
+                        queue<pair<int,int>> fila;
+                        fila.push(make_pair(i,0));
+                        visitado[i] = true;
+
+                        while (!fila.empty())
+                        {
+                            int vert = fila.front().first;
+                            int nivel = fila.front().second;
+                            fila.pop();
+
+                            for(int a : arestas[vert]){
+                                if(visitado[a]) continue;
+                                this->diametro = max(this->diametro, nivel+1);
+                                fila.push(make_pair(a,nivel+1));
+                                visitado[a] = true;
+                            }
+                        }
+                    }
+                }
+                else{
+                    stack<int> pilha;
+                } 
+            }
             for(int i = 1; i < num_vertices; i++){
                 vector<bool> visitado(num_vertices, false);
 
@@ -261,6 +321,7 @@ class graph_vetor : public graph{
 
         void componentes_conexas(){
             vector<bool> visitado(num_vertices, false);
+            this->rel_comp_conex.resize(num_vertices, 0);
             for(int i = 1; i < num_vertices; i++){
                 if(visitado[i])continue;
                 this->list_comp_conex.resize(list_comp_conex.size()+1);
@@ -272,6 +333,7 @@ class graph_vetor : public graph{
                 while (!fila.empty())
                 {
                     int vert = fila.front();
+                    rel_comp_conex[i] = list_comp_conex.size();
                     list_comp_conex.back().push_back(vert);
                     fila.pop();
                     for(int a : arestas[vert]){
@@ -280,10 +342,45 @@ class graph_vetor : public graph{
                         visitado[a] = true;
                     }
                 }
-
             }
-            sort(list_comp_conex.rbegin(), list_comp_conex.rend());
+            // sort(list_comp_conex.rbegin(), list_comp_conex.rend());
+        }
 
+        void isTree(){
+            this->tree_comp_conex.resize(this->list_comp_conex.size(), 1);
+
+            for(int i = 0; i < list_comp_conex.size(); i++){
+                int v = list_comp_conex[i][0];
+                vector<bool> visitado(this->num_vertices, false);
+                vector<int> pai(num_vertices,-1);
+                stack<int> pilha;
+
+
+                pai[v] = v;
+                pilha.push(v);
+
+                while (!pilha.empty()) {
+                    int vertice = pilha.top();
+                    pilha.pop();
+                    if(!visitado[vertice]){
+                        visitado[vertice] = true;
+                        for (int vizinho : arestas[vertice]) {
+                            if (!visitado[vizinho]) {
+                                pai[vizinho] = vertice;
+                                nivel[vizinho] = nivel[vertice] + 1;
+                                pilha.push(vizinho);
+                            }
+                            else{
+                                if(vizinho != pai[vertice]){
+                                    tree_comp_conex[i] = false;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(!tree_comp_conex[i]) break;
+                }
+            }
         }
 
 
