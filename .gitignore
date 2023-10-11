@@ -1,4 +1,3 @@
-./grafos_tp1/*
-./grafos_tp2/*
-./teste.cpp
-./teste.exe
+grafos_tp1/*
+grafos_tp2/*
+*.exe
