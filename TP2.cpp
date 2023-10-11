@@ -4,6 +4,10 @@
 #include <fstream>
 using namespace std;
 
+//Estruturei um pouco o código, algumas estruturas estão meio erradas
+//Porque está faltando representar o peso. Criar aresta não implementado.
+
+
 
 class weighted_graph{
 
@@ -17,7 +21,6 @@ class weighted_graph{
         //Le o grafo de um arquivo
         void read_graph(string filename){
 
-            cout << "Lendo grafo" << endl;
             ifstream file;
             string line;
             file.open(filename, ios::in);
@@ -36,7 +39,7 @@ class weighted_graph{
                     int n1 = stoi(line.substr(line.find_last_of(" ")+1));
                     int n2 = stoi(line.substr(0, line.find_last_of(" ")));
                     int n3 = 0;
-                    inserir_vertice(n1,n2,n3);
+                    criar_aresta(n1,n2,n3);
                     this->num_arestas++;
                 }
                 this->num_arestas++;
@@ -72,10 +75,11 @@ class weighted_graph{
         int num_vertices = -1;
         int num_arestas = -1;
 
-
+        //Após sabermos o número de vértices, atualiza a estrutura
         virtual void atualizar_estrutura();
 
-        virtual void inserir_vertice(int n1, int n2, int n3);
+        //Insere arestas dependendo da respresentação
+        virtual void criar_aresta(int n1, int n2, int n3);
 };
 
 //Representação usando matriz de adjascencia
@@ -83,9 +87,7 @@ class weighted_matrix: public weighted_graph{
 
     public:
 
-        weighted_matrix(string filename): weighted_graph(filename){
-
-        }
+        weighted_matrix(string filename): weighted_graph(filename){}
 
 
     private:
@@ -98,6 +100,9 @@ class weighted_matrix: public weighted_graph{
             for(vector<int> a : arestas) a.resize(this->num_vertices);
         }
 
+        //Insere arestas dependendo da respresentação
+        void criar_aresta(int n1, int n2, int n3);
+
 };
 
 //Representação usando vetor de adjascencia
@@ -109,7 +114,6 @@ class weighted_vector: public weighted_graph{
         weighted_vector(string filename): weighted_graph(filename){}
 
 
-
     private:
 
         vector<vector<int>> arestas;
@@ -118,6 +122,9 @@ class weighted_vector: public weighted_graph{
         void atualizar_estrutura(){
             arestas.resize(this->num_vertices);
         }
+
+        //Insere arestas dependendo da respresentação
+        void criar_aresta(int n1, int n2, int n3);
 
 };
 
@@ -129,10 +136,14 @@ class weighted_map: public weighted_graph{
         //Chamando o construtora da classe base
         weighted_map(string filename): weighted_graph(filename){}
 
+
     private:
 
         map<string,vector<int>> arestas;
 
         //Pela natureza do map, não precisamos atualizar estrutura
+
+        //Insere arestas dependendo da respresentação
+        void criar_aresta(int n1, int n2, int n3);
 
 };
