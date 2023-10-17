@@ -16,14 +16,10 @@ class weighted_graph{
 
     public:
 
-        //Construtor do Grafo, chama a leitura do mesmo
-        weighted_graph(string filename){
-            read_graph(filename);
-        }
-
         //Le o grafo de um arquivo
         void read_graph(string filename){
 
+            cout << "Lendo grafo " << graph_name << endl;
             ifstream file;
             string line;
             file.open(filename, ios::in);
@@ -44,6 +40,7 @@ class weighted_graph{
                     double n3 = stod(line.substr(line.find_last_of(" ")+1));
                     if(n3 < 0) this->negative_weights = true;
                     criar_aresta(n1,n2,n3);
+                    cout << "na" << endl;
                     this->num_arestas++;
                 }
                 this->num_arestas++;
@@ -70,11 +67,13 @@ class weighted_graph{
         // Roda caminho minimo em Dijkstra (usando uma heap) e retorna vetores de distancia e pais de cada vértice
         pair<vector<double>&, vector<int>&> Dijkstra_heap(int vert){
             
-            vector<double> dist(num_vertices,1e8);
+            cout << "Rodando Dijkstra_heap O(n log(n))" << endl;
+            vector<double> dist(num_vertices,__DBL_MAX__);
             vector<int> pai(num_vertices, -1);
             priority_queue<pair<int,double>, vector<pair<int,double>>, greater<pair<int,double>>> pq;
             dist[vert] = 0;
             pai[vert] = vert;
+            pq.push(make_pair(vert,0));
 
             while (!pq.empty())
             {
@@ -91,7 +90,7 @@ class weighted_graph{
                     }
                 }
             }
-
+            
             return {dist, pai};
             
         }
@@ -106,6 +105,7 @@ class weighted_graph{
         //e infinito para arestas inexistentes
         vector<vector<double>>& Floyd_Warshal(vector<vector<double>>& dist){
 
+            cout << "RodandoFloyd_Warshal O(n^3)" << endl;
             for(int k =0; k < num_arestas; k ++)
                 for(int i =0; i < num_arestas; i++)
                     for(int j =0; j < num_arestas; j ++)
@@ -116,18 +116,20 @@ class weighted_graph{
 
 
     protected:
-        string graph_name;
+        string graph_name = "Graph";;
         bool negative_weights = false;
         int num_vertices = -1;
         int num_arestas = -1;
+        vector<int> arestas;
+        
 
         //Após sabermos o número de vértices, atualiza a estrutura
-        virtual void atualizar_estrutura();
+        virtual void atualizar_estrutura() = 0;
 
         //Insere arestas dependendo da respresentação
-        virtual void criar_aresta(int n1, int n2, double n3);
+        virtual void criar_aresta(int n1, int n2, double n3) = 0;
 
-        virtual vector<pair<int,double>>& get_vizinhos(int vert);
+        virtual vector<pair<int,double>>& get_vizinhos(int vert) = 0;
 };
 
 
@@ -137,7 +139,10 @@ class weighted_vector: public weighted_graph{
     public:
 
         //Chamando o construtor da classe base
-        weighted_vector(string filename): weighted_graph(filename){}
+        weighted_vector(string filename){
+            this->graph_name = filename;
+            read_graph(filename);
+        }
 
 
     private:
@@ -145,12 +150,18 @@ class weighted_vector: public weighted_graph{
         vector<vector<pair<int,double>>> arestas;
 
         //Após sabermos o número de vértices, atualiza a estrutura
-        void atualizar_estrutura(){
-            arestas.resize(this->num_vertices);
+        void atualizar_estrutura() override {
+            cout << "oie" << endl;
+            arestas.resize(num_vertices);
+            cout << "cabou" << endl;
         }
 
         //Insere arestas dependendo da respresentação
-        void criar_aresta(int n1, int n2, double n3);
+        void criar_aresta(int n1, int n2, double n3) override {
+            cout << "criando aresta" << endl;
+            arestas[n1].push_back(make_pair(n2,n3));
+            arestas[n2].push_back(make_pair(n1,n3));
+        }
 
         //retorna um ponteiro para o vetor com os vizinhos de vert
         virtual vector<pair<int,double>>& get_vizinhos(int vert){return arestas[vert];}
@@ -164,7 +175,10 @@ class weighted_map: public weighted_graph{
     public:
 
         //Chamando o construtora da classe base
-        weighted_map(string filename): weighted_graph(filename){}
+        weighted_map(string filename){
+            this->graph_name = filename;
+            read_graph(filename);
+        }
 
 
     private:
@@ -185,7 +199,10 @@ class weighted_matrix: public weighted_graph{
 
     public:
 
-        weighted_matrix(string filename): weighted_graph(filename){}
+        weighted_matrix(string filename){
+            this->graph_name = filename;
+            read_graph(filename);
+        }
 
 
     private:
