@@ -1,5 +1,16 @@
 #include "TP2.h"
 #include <iostream>
+ofstream file;
+
+void caminho_min(int inic, vector<int> a, int obj){
+        while (a[inic] != obj)
+        {
+            file << inic << " ";
+            inic = a[inic];
+        }
+        file << obj << "\n";
+}
+
 
 void run_ex(){
 
@@ -9,24 +20,34 @@ void run_ex(){
         
         //EXERCICIO 1
         
-        ofstream file;
+        
         cout << "Rodando EX 1\n";
         file.open("Quest_1_G" + to_string(i) + ".txt");
         auto a = g1.Dijkstra_heap(10);
         //for(auto b : a.first) cout << b << "\n";
         file << a.first[20] << "\n";
+        caminho_min(20, a.second, 10);
         file << a.first[30] << "\n";
+        caminho_min(30, a.second, 10);
         file << a.first[40] << "\n";
+        caminho_min(40, a.second, 10);
         file << a.first[50] << "\n";
+        caminho_min(50, a.second, 10);
         file << a.first[60] << "\n";
+        caminho_min(60, a.second, 10);
         file << "-----------------------------" << "\n";
         cout << "feito" << endl;
         auto b = g1.Dijkstra_vector(10);
         file << b.first[20] << "\n";
+        caminho_min(20, a.second, 10);
         file << b.first[30] << "\n";
+        caminho_min(30, a.second, 10);
         file << b.first[40] << "\n";
+        caminho_min(40, a.second, 10);
         file << b.first[50] << "\n";
+        caminho_min(50, a.second, 10);
         file << b.first[60] << "\n";
+        caminho_min(60, a.second, 10);
         file.close();
 
         //EXERCICIO 2
@@ -54,17 +75,21 @@ void run_ex(){
         // file.close();
     }
 
-    ofstream file;
     //EXERCICIO 3
     cout << "Rodando EX 3\n";
     file.open("Quest_3.txt");
     weighted_vector g1("rede_colaboracao.txt");
     auto a = g1.Dijkstra_heap(2722); // Dijkstra
     file << a.first[11365] << "\n"; //Turing
+    caminho_min(11365, a.second, 2722);
     file << a.first[471365] << "\n"; //Kruskal
+    caminho_min(471365, a.second, 2722);
     file << a.first[5709] << "\n"; //Jon M. Kleinberg
+    caminho_min(5709, a.second, 2722);
     file << a.first[11386] << "\n"; //Eva Tardos
+    caminho_min(11386, a.second, 2722);
     file << a.first[343930] << "\n"; //Daniel
+    caminho_min(343930, a.second, 2722);
 
     file.close();
 
