@@ -36,18 +36,17 @@ void run_ex(){
         file << a.first[60] << "\n";
         caminho_min(60, a.second, 10);
         file << "-----------------------------" << "\n";
-        cout << "feito" << endl;
         auto b = g1.Dijkstra_vector(10);
         file << b.first[20] << "\n";
-        caminho_min(20, a.second, 10);
+        caminho_min(20, b.second, 10);
         file << b.first[30] << "\n";
-        caminho_min(30, a.second, 10);
+        caminho_min(30, b.second, 10);
         file << b.first[40] << "\n";
-        caminho_min(40, a.second, 10);
+        caminho_min(40, b.second, 10);
         file << b.first[50] << "\n";
-        caminho_min(50, a.second, 10);
+        caminho_min(50, b.second, 10);
         file << b.first[60] << "\n";
-        caminho_min(60, a.second, 10);
+        caminho_min(60, b.second, 10);
         file.close();
 
         //EXERCICIO 2
@@ -72,7 +71,7 @@ void run_ex(){
         //     sum += elapsed;
         // }
         // file << sum/100 << "\n";
-        // file.close();
+        file.close();
     }
 
     //EXERCICIO 3
