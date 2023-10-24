@@ -72,18 +72,18 @@ class weighted_graph{
             while (!vc.empty())
             {
                 
-                int atual = 1; double custo = 1e9;
+                int atual = 1, index = 0; double custo = 1e9; 
                 for(int i = 0; i < vc.size(); i++){
                     if(vc[i].f < custo){
                         custo = vc[i].f;
                         atual = vc[i].s;
+                        index = i;
                     }
                 }
-                vc.erase(vc.begin() + atual);
+                vc.erase(vc.begin() + index);
                 
 
                 if(custo > dist[atual]) continue;
-                
 
                 for(pair<int,double> viz : get_vizinhos(atual)){
                     //get vizinhos devolve um vetor {aresta,peso}

@@ -62,22 +62,22 @@ void run_ex(){
         }
         file << sum/100 << "\n";
 
-        // sum = 0;
-        // for(int i =1; i <= 100; i ++){
-        //     clock_t start_time = clock();
-        //     g1.Dijkstra_vector(5*i);
-        //     clock_t end_time = clock();
-        //     double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
-        //     sum += elapsed;
-        // }
-        // file << sum/100 << "\n";
+        sum = 0;
+        for(int i =1; i <= 100; i ++){
+            clock_t start_time = clock();
+            g1.Dijkstra_vector(5*i);
+            clock_t end_time = clock();
+            double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
+            sum += elapsed;
+        }
+        file << sum/100 << "\n";
         file.close();
     }
 
     //EXERCICIO 3
     cout << "Rodando EX 3\n";
     file.open("Quest_3.txt");
-    weighted_vector g1("rede_colaboracao.txt");
+    weighted_vector g1("grafos_tp2/rede_colaboracao.txt");
     auto a = g1.Dijkstra_heap(2722); // Dijkstra
     file << a.first[11365] << "\n"; //Turing
     caminho_min(11365, a.second, 2722);
@@ -99,13 +99,14 @@ void run_ex(){
 int main()
 {
     //weighted_vector g1("grafos_tp2/grafo0.txt");
-    //weighted_vector g1("grafos_tp2/grafo_W_1.txt");
-    //auto a = g1.Dijkstra_heap(1);
+    weighted_vector g1("grafos_tp2/grafo_W_1.txt");
+    auto a = g1.Dijkstra_vector(1);
     //for(auto b : a.first) cout << b << endl;
+    cout << a.first[410] << endl;
 
 
 
-    run_ex();
+    //run_ex();
     
         
 }
