@@ -49,7 +49,7 @@ class weighted_graph{
 
 
         //Baseado nas características do grafo roda o algorimo de caminho mínimo adequado
-        pair<vector<double>&, vector<int>&> Caminho_mínimo(int vert){
+        pair<vector<double>, vector<int>> Caminho_mínimo(int vert){
             if(!this->negative_weights){
                 return this->Dijkstra_heap(vert);
 
@@ -60,24 +60,23 @@ class weighted_graph{
         }
 
         // Roda caminho minimo em Dijkstra (usando um vetor) e retorna vetores de distancia e pais de cada vértice
-        pair<vector<double>&, vector<int>&> Dijkstra_vector(int vert){
+        pair<vector<double>, vector<int>> Dijkstra_vector(int vert){
 
-            cout << "Rodando Dijkstra_vector " << endl;
-            vector<double> dist(num_vertices,__DBL_MAX__);
+            vector<double> dist(num_vertices,1e9);
             vector<int> pai(num_vertices, -1);
-            vector<pair<int,double>> vc;
+            vector<pair<double,int>> vc;
             dist[vert] = 0;
             pai[vert] = vert;
-            vc.push_back(make_pair(vert,0));
+            vc.push_back(make_pair(0,vert));
 
             while (!vc.empty())
             {
                 
-                int atual = 1; double custo = __DBL_MAX__;
+                int atual = 1; double custo = 1e9;
                 for(int i = 0; i < vc.size(); i++){
-                    if(vc[i].s < custo){
-                        custo = vc[i].s;
-                        atual = vc[i].f;
+                    if(vc[i].f < custo){
+                        custo = vc[i].f;
+                        atual = vc[i].s;
                     }
                 }
                 vc.erase(vc.begin() + atual);
@@ -87,58 +86,57 @@ class weighted_graph{
                 
 
                 for(pair<int,double> viz : get_vizinhos(atual)){
+                    //get vizinhos devolve um vetor {aresta,peso}
                     if(dist[viz.f] > custo + viz.s){
-                        vc.push_back({viz.f, custo + viz.s});
+                        vc.push_back({custo + viz.s, viz.f});
                         dist[viz.f] = custo + viz.s;
                         pai[viz.f] = atual;
                     }
                 }
             }
-            cout << *(&dist[1]) << endl;
             return {dist, pai};
 
         }
 
         // Roda caminho minimo em Dijkstra (usando uma heap) e retorna vetores de distancia e pais de cada vértice
-        pair<vector<double>&, vector<int>&> Dijkstra_heap(int vert){
+        pair<vector<double>, vector<int>> Dijkstra_heap(int vert){
             
-            cout << "Rodando Dijkstra_heap O(n log(n))" << endl;
-            vector<double> dist(num_vertices,__DBL_MAX__);
+            vector<double> dist(num_vertices,1e9);
             vector<int> pai(num_vertices, -1);
-            priority_queue<pair<int,double>, vector<pair<int,double>>, greater<pair<int,double>>> pq;
+            priority_queue<pair<double,int>, vector<pair<double,int>>, greater<pair<double,int>>> pq;
             dist[vert] = 0;
             pai[vert] = vert;
-            pq.push(make_pair(vert,0));
+            pq.push(make_pair(0,vert));
 
             while (!pq.empty())
             {
-                int atual = pq.top().f; int custo = pq.top().s;
+                int atual = pq.top().s; double custo = pq.top().f;
                 pq.pop();
 
                 if(custo > dist[atual]) continue;
 
                 for(pair<int,double> viz : get_vizinhos(atual)){
+                    //get vizinhos devolve um vetor {aresta,peso}
                     if(dist[viz.f] > custo + viz.s){
-                        pq.push({viz.f, custo + viz.s});
+                        pq.push({custo + viz.s, viz.f});
                         dist[viz.f] = custo + viz.s;
                         pai[viz.f] = atual;
                     }
                 }
             }
-            
             return {dist, pai};
             
         }
 
         //EXTRA: Algoritmo Bellman-Ford
         //Roda caminho minimo em Bellman-Ford e retorna vetores de distancia e pais de cada vértice
-        pair<vector<double>&, vector<int>&> Bellman_Ford(int vert);
+        pair<vector<double>, vector<int>> Bellman_Ford(int vert);
 
         //EXTRA: Algoritmo Floyd-Warshal
         //Roda caminho minimo em Floyd-Warshal e retorna vetores de distancia
         //A matrix deverá ser (num_vert x num_vert) e a distancia de (i,i) deverá ser 0 para todo i
         //e infinito para arestas inexistentes
-        vector<vector<double>>& Floyd_Warshal(vector<vector<double>>& dist){
+        vector<vector<double>> Floyd_Warshal(vector<vector<double>>& dist){
 
             cout << "RodandoFloyd_Warshal O(n^3)" << endl;
             for(int k =0; k < num_arestas; k ++)
