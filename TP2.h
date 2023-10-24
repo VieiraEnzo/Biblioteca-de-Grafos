@@ -7,8 +7,7 @@ using namespace std;
 #define f first
 #define s second
 
-//Estruturei um pouco o código, algumas estruturas estão meio erradas
-//Porque está faltando representar o peso. Criar aresta não implementado.
+//Tem um problema no dyikstra_vector no retorno da posição 1
 
 
 
@@ -40,7 +39,6 @@ class weighted_graph{
                     double n3 = stod(line.substr(line.find_last_of(" ")+1));
                     if(n3 < 0) this->negative_weights = true;
                     criar_aresta(n1,n2,n3);
-                    cout << "na" << endl;
                     this->num_arestas++;
                 }
                 this->num_arestas++;
@@ -62,7 +60,44 @@ class weighted_graph{
         }
 
         // Roda caminho minimo em Dijkstra (usando um vetor) e retorna vetores de distancia e pais de cada vértice
-        pair<vector<int>, vector<int>> Dijkstra_vector(int vert);
+        pair<vector<double>&, vector<int>&> Dijkstra_vector(int vert){
+
+            cout << "Rodando Dijkstra_vector " << endl;
+            vector<double> dist(num_vertices,__DBL_MAX__);
+            vector<int> pai(num_vertices, -1);
+            vector<pair<int,double>> vc;
+            dist[vert] = 0;
+            pai[vert] = vert;
+            vc.push_back(make_pair(vert,0));
+
+            while (!vc.empty())
+            {
+                
+                int atual = 1; double custo = __DBL_MAX__;
+                for(int i = 0; i < vc.size(); i++){
+                    if(vc[i].s < custo){
+                        custo = vc[i].s;
+                        atual = vc[i].f;
+                    }
+                }
+                vc.erase(vc.begin() + atual);
+                
+
+                if(custo > dist[atual]) continue;
+                
+
+                for(pair<int,double> viz : get_vizinhos(atual)){
+                    if(dist[viz.f] > custo + viz.s){
+                        vc.push_back({viz.f, custo + viz.s});
+                        dist[viz.f] = custo + viz.s;
+                        pai[viz.f] = atual;
+                    }
+                }
+            }
+            cout << *(&dist[1]) << endl;
+            return {dist, pai};
+
+        }
 
         // Roda caminho minimo em Dijkstra (usando uma heap) e retorna vetores de distancia e pais de cada vértice
         pair<vector<double>&, vector<int>&> Dijkstra_heap(int vert){
@@ -151,14 +186,11 @@ class weighted_vector: public weighted_graph{
 
         //Após sabermos o número de vértices, atualiza a estrutura
         void atualizar_estrutura() override {
-            cout << "oie" << endl;
             arestas.resize(num_vertices);
-            cout << "cabou" << endl;
         }
 
         //Insere arestas dependendo da respresentação
         void criar_aresta(int n1, int n2, double n3) override {
-            cout << "criando aresta" << endl;
             arestas[n1].push_back(make_pair(n2,n3));
             arestas[n2].push_back(make_pair(n1,n3));
         }
