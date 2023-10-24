@@ -99,14 +99,14 @@ void run_ex(){
 int main()
 {
     //weighted_vector g1("grafos_tp2/grafo0.txt");
-    weighted_vector g1("grafos_tp2/grafo_W_1.txt");
-    auto a = g1.Dijkstra_vector(1);
+    //weighted_vector g1("grafos_tp2/grafo_W_1.txt");
+    //auto a = g1.Dijkstra_vector(1);
     //for(auto b : a.first) cout << b << endl;
-    cout << a.first[410] << endl;
+    //cout << a.first[410] << endl;
 
 
 
-    //run_ex();
+    run_ex();
     
         
 }
