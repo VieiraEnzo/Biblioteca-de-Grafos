@@ -19,7 +19,7 @@ void caminho_min(int inic, vector<int>& a, int obj){
 
 void run_ex(){
 
-        for(int i =4; i <=5; i++){
+        for(int i =3; i <=5; i++){
         cout << "Rodando Grafo " << i << "\n";
         weighted_vector g1("./grafos_tp2/grafo_W_" + to_string(i) + ".txt");
         
@@ -56,36 +56,33 @@ void run_ex(){
 
         // EXERCICIO 2
         cout << "Rodando EX 2\n";
-        file.open("Quest_2_G" + to_string(i) + ".txt");
+        file.open("Quest_2.2_G" + to_string(i) + ".txt");
 
-        vector<double> res;
         double sum = 0;
-        #pragma omp parallel for
-        for(int i =1; i <= 10; i ++){
+        for(int i =1; i <= 100; i ++){
             clock_t start_time = clock();
             g1.Dijkstra_heap(5*i);
             clock_t end_time = clock();
             double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
-            res.push_back(elapsed);
+            sum += elapsed;
         }
-        for(auto a : res) sum+= a;
-        file << sum/10 << "\n";
+        file << sum/100 << "\n";
         file.close();
         
-        cout << "parte 2 ex 2" <<endl;
-        res.clear();
-        #pragma omp parallel for
-        for(int i =1; i <= 1; i ++){
-            clock_t start_time = clock();
-            g1.Dijkstra_vector(5*i);
-            clock_t end_time = clock();
-            double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
-            res.push_back(elapsed);
-        }
-        sum = 0;
-        for(auto a : res) sum+= a;
-        file << sum/1 << "\n";
-        file.close();
+        // cout << "parte 2 ex 2" <<endl;
+        // res.clear();
+        // #pragma omp parallel for
+        // for(int i =1; i <= 1; i ++){
+        //     clock_t start_time = clock();
+        //     g1.Dijkstra_vector(5*i);
+        //     clock_t end_time = clock();
+        //     double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
+        //     res.push_back(elapsed);
+        //}
+        // sum = 0;
+        // for(auto a : res) sum+= a;
+        // file << sum/1 << "\n";
+        // file.close();
     }
 
     //EXERCICIO 3
@@ -106,7 +103,7 @@ void run_ex(){
     // caminho_min(343930, a.second, 2722);
 
 
-    file.close();
+    // file.close();
 
 
 }
