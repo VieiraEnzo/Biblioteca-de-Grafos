@@ -130,7 +130,53 @@ class weighted_graph{
 
         //EXTRA: Algoritmo Bellman-Ford
         //Roda caminho minimo em Bellman-Ford e retorna vetores de distancia e pais de cada vértice
-        pair<vector<double>, vector<int>> Bellman_Ford(int vert);
+        pair<vector<double>, vector<int>> Bellman_Ford(int vert){
+            vector<double> dist(num_vertices, 1e9);
+            vector<int> pai(num_vertices, -1);
+
+            vector<pair<double, pair<int,int>>> lista_arestas;
+
+            for(int i = 0; i < num_vertices; i++){
+                for(pair<int,double> viz : get_vizinhos(i)){
+                    //get vizinhos devolve um vetor {aresta,peso}
+                    lista_arestas.push_back( {viz.first, {i, viz.second}} );
+                    dist[vert] = 0;
+                    pai[vert] = vert;
+                }
+            }
+
+            for(int k = 1; k < num_vertices; k++){
+                for(int i = 0; i < lista_arestas.size(); i++){
+                    int a = lista_arestas[i].second.first, b = lista_arestas[i].second.second;
+                    double c = lista_arestas[i].first;
+                    
+                    //checa se dist[a] é infinita ou se a aresta atual não possui uma melhora
+                    if( abs(dist[a] - 1e9) < 1e-9 || dist[b] < dist[a] + c || abs(dist[b] - (dist[a] + c)) < 1e-9 ) continue;
+                    dist[b] = dist[a] + c;
+                    pai[b] = a;
+                }
+            }
+
+            bool negative_cycle = false;
+            for(int i = 0; i < lista_arestas.size(); i++){
+                int a = lista_arestas[i].second.first, b = lista_arestas[i].second.second;
+                double c = lista_arestas[i].first;
+
+                if( abs(dist[a] - 1e9) < 1e-9 || dist[b] < dist[a] + c || abs(dist[b] - (dist[a] + c)) < 1e-9 ) continue;
+                
+                negative_cycle = true;
+                break;
+            }
+
+            //Se há um ciclo negativo, todos os vértices que vert alcança possuem distância mínima infinitamente pequena
+            if(negative_cycle){
+                for(int i = 0; i < num_vertices; i++){
+                    if(abs(dist[i] - 1e9) > 1e-9) dist[i] = -1e9;
+                }
+            }
+
+            return {dist, pai};
+        }
 
         //EXTRA: Algoritmo Floyd-Warshal
         //Roda caminho minimo em Floyd-Warshal e retorna vetores de distancia
