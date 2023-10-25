@@ -71,7 +71,6 @@ class weighted_graph{
 
             while (!vc.empty())
             {
-                
                 int atual = 1, index = 0; double custo = 1e9; 
                 for(int i = 0; i < vc.size(); i++){
                     if(vc[i].f < custo){
@@ -80,7 +79,10 @@ class weighted_graph{
                         index = i;
                     }
                 }
+
+
                 vc.erase(vc.begin() + index);
+
                 
 
                 if(custo > dist[atual]) continue;
@@ -139,7 +141,7 @@ class weighted_graph{
             for(int i = 0; i < num_vertices; i++){
                 for(pair<int,double> viz : get_vizinhos(i)){
                     //get vizinhos devolve um vetor {aresta,peso}
-                    lista_arestas.push_back( {viz.first, {i, viz.second}} );
+                    lista_arestas.push_back( {viz.second, {i, viz.first}} );
                     dist[vert] = 0;
                     pai[vert] = vert;
                 }
@@ -187,7 +189,6 @@ class weighted_graph{
         //e infinito para arestas inexistentes
         vector<vector<double>> Floyd_Warshal(vector<vector<double>>& dist){
 
-            cout << "RodandoFloyd_Warshal O(n^3)" << endl;
             for(int k =0; k < num_arestas; k ++)
                 for(int i =0; i < num_arestas; i++)
                     for(int j =0; j < num_arestas; j ++)
@@ -244,57 +245,5 @@ class weighted_vector: public weighted_graph{
 
         //retorna um ponteiro para o vetor com os vizinhos de vert
         virtual vector<pair<int,double>>& get_vizinhos(int vert){return arestas[vert];}
-
-};
-
-//Representação usando map para guardar vetor (Indices como strings)
-class weighted_map: public weighted_graph{
-
-
-    public:
-
-        //Chamando o construtora da classe base
-        weighted_map(string filename){
-            this->graph_name = filename;
-            read_graph(filename);
-        }
-
-
-    private:
-
-        map<string,pair<int,double>> arestas;
-
-        //Pela natureza do map, não precisamos atualizar estrutura
-
-        //Insere arestas dependendo da respresentação
-        void criar_aresta(int n1, int n2, int n3);
-
-};
-
-
-//Representação usando matriz de adjascencia
-class weighted_matrix: public weighted_graph{
-
-
-    public:
-
-        weighted_matrix(string filename){
-            this->graph_name = filename;
-            read_graph(filename);
-        }
-
-
-    private:
-
-        vector<vector<int>> arestas;
-
-        //Após sabermos o número de vértices, atualiza a estrutura
-        void atualizar_estrutura(){
-            arestas.resize(this->num_vertices);
-            for(vector<int> a : arestas) a.resize(this->num_vertices);
-        }
-
-        //Insere arestas dependendo da respresentação
-        void criar_aresta(int n1, int n2, int n3);
 
 };
