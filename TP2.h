@@ -146,6 +146,7 @@ class weighted_graph{
             }
 
             for(int k = 1; k < num_vertices; k++){
+                bool melhorou = false;
                 for(int i = 0; i < lista_arestas.size(); i++){
                     int a = lista_arestas[i].second.first, b = lista_arestas[i].second.second;
                     double c = lista_arestas[i].first;
@@ -154,7 +155,9 @@ class weighted_graph{
                     if( abs(dist[a] - 1e9) < 1e-9 || dist[b] < dist[a] + c || abs(dist[b] - (dist[a] + c)) < 1e-9 ) continue;
                     dist[b] = dist[a] + c;
                     pai[b] = a;
+                    melhorou = true;
                 }
+                if(!melhorou) break;
             }
 
             bool negative_cycle = false;
