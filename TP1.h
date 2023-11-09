@@ -931,87 +931,76 @@ class graph_list : public graph{
         }
 };
 
-int main()
-{
-    cout << "INCIANDO PROGRAMA" << "\n";
-    for(int i =2; i <= 6; i++)
-    {   
-        graph_vetor g1("./grafos/grafo_"+to_string(i)+".txt");
-        // cout << "Rodando grafo " << i << "\n";
-
-        //Ex 2
-        double sum =0;
-        cout << "RODANDO BFS's" << endl;
-        for(int j = 1; j <= 100; j ++)
-        {
-            clock_t start_time = clock();
-            g1.bfs(j);
-            clock_t end_time = clock();
-            ofstream file;
-            file.open("BFS_TIME_G" + to_string(i) + ".txt", ios_base::app);
-            double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
-            file << elapsed << "\n";
-            sum += elapsed;
-            if(j==100){file << "média: "<< (double)sum/(double)100 << "\n";}
-            file.close();
-        }
-        
-        // //Ex3
-        sum = 0;
-        cout << "RODANDO DFS's" << endl;
-        for(int j = 1; j <= 100; j ++)
-        {
-            clock_t start_time = clock();
-            g1.dfs_norecursive(j * 5);
-            clock_t end_time = clock();
-            ofstream file;
-            file.open("DFS_TIME_G" + to_string(i) + ".txt", ios_base::app);
-            double elapsed = (end_time - start_time) / (double)CLOCKS_PER_SEC;
-            file << elapsed << "\n";
-            sum += elapsed;
-            if(j==100){file << "média: " << (double)sum/(double)100 << "\n";}
-            file.close();
-        }
-
-
-        // //Ex5
-        ofstream file;
-        cout << "Calculando distancias" << endl;
-        file.open("Distancias" + to_string(i) + ".txt", ios_base::app);
-        file << "10-20: " << g1.distancia(10,20) << "\n";
-        file << "10-30: " << g1.distancia(10,30) << "\n";
-        file << "20-30: " << g1.distancia(20,30) << "\n";
-        file.close();
-
-
-        // //Ex6 quantas componentes conexas
-        g1.escrever_grafo();
-        #pragma omp parallel
-         {
-            int thread_id = omp_get_thread_num();
-            cout << "Hello from thread " << thread_id << endl;
-        }
-
-        //Ex7 diametro
-        cout << "Calculando diametro" << endl;
-        file.open("Diametro" + to_string(i) + ".txt", ios_base::app);
-        clock_t start_time = clock();
-        file << g1.calc_diametro() << "\n";
-        clock_t end_time = clock();
-        double elapsed = (end_time - start_time) / (double)CLOCKS_PER_SEC;
-        file << elapsed << "\n";
-        file.close();
-
-    }
-
-        // //Codigo usado para descobrir a memória utilizada
-        // PROCESS_MEMORY_COUNTERS_EX pmc;
-        // GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
-        // //virtual memory currently used by current process
-        // SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
-        // //Physical Memory currently used by current process
-        // SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
-        // cout << "memoria usada: "<< physMemUsedByMe << endl;
-
-
-}
+// int main()
+// {
+//     cout << "INCIANDO PROGRAMA" << "\n";
+//     for(int i =2; i <= 6; i++)
+//     {   
+//         graph_vetor g1("./grafos/grafo_"+to_string(i)+".txt");
+//         // cout << "Rodando grafo " << i << "\n";
+//         //Ex 2
+//         double sum =0;
+//         cout << "RODANDO BFS's" << endl;
+//         for(int j = 1; j <= 100; j ++)
+//         {
+//             clock_t start_time = clock();
+//             g1.bfs(j);
+//             clock_t end_time = clock();
+//             ofstream file;
+//             file.open("BFS_TIME_G" + to_string(i) + ".txt", ios_base::app);
+//             double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
+//             file << elapsed << "\n";
+//             sum += elapsed;
+//             if(j==100){file << "média: "<< (double)sum/(double)100 << "\n";}
+//             file.close();
+//         }      
+//         // //Ex3
+//         sum = 0;
+//         cout << "RODANDO DFS's" << endl;
+//         for(int j = 1; j <= 100; j ++)
+//         {
+//             clock_t start_time = clock();
+//             g1.dfs_norecursive(j * 5);
+//             clock_t end_time = clock();
+//             ofstream file;
+//             file.open("DFS_TIME_G" + to_string(i) + ".txt", ios_base::app);
+//             double elapsed = (end_time - start_time) / (double)CLOCKS_PER_SEC;
+//             file << elapsed << "\n";
+//             sum += elapsed;
+//             if(j==100){file << "média: " << (double)sum/(double)100 << "\n";}
+//             file.close();
+//         }
+//         // //Ex5
+//         ofstream file;
+//         cout << "Calculando distancias" << endl;
+//         file.open("Distancias" + to_string(i) + ".txt", ios_base::app);
+//         file << "10-20: " << g1.distancia(10,20) << "\n";
+//         file << "10-30: " << g1.distancia(10,30) << "\n";
+//         file << "20-30: " << g1.distancia(20,30) << "\n";
+//         file.close();
+//         // //Ex6 quantas componentes conexas
+//         g1.escrever_grafo();
+//         #pragma omp parallel
+//          {
+//             int thread_id = omp_get_thread_num();
+//             cout << "Hello from thread " << thread_id << endl;
+//         }
+//         //Ex7 diametro
+//         cout << "Calculando diametro" << endl;
+//         file.open("Diametro" + to_string(i) + ".txt", ios_base::app);
+//         clock_t start_time = clock();
+//         file << g1.calc_diametro() << "\n";
+//         clock_t end_time = clock();
+//         double elapsed = (end_time - start_time) / (double)CLOCKS_PER_SEC;
+//         file << elapsed << "\n";
+//         file.close();
+//     }
+//         // //Codigo usado para descobrir a memória utilizada
+//         // PROCESS_MEMORY_COUNTERS_EX pmc;
+//         // GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
+//         // //virtual memory currently used by current process
+//         // SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
+//         // //Physical Memory currently used by current process
+//         // SIZE_T physMemUsedByMe = pmc.WorkingSetSize;
+//         // cout << "memoria usada: "<< physMemUsedByMe << endl;
+// }
