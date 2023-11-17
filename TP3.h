@@ -74,6 +74,7 @@ class weighted_graph{
                         if(rGraph[parent[start].first][i].first == start){
                             //cout << "cap antes: " << rGraph[parent[start].first][i].second << endl;
                             rGraph[parent[start].first][i].second -= minResCap;
+                            //if(rGraph[parent[start].first][i].second < 0) cout << "negativo" << endl;
                             //cout << "cap despois: " << rGraph[parent[start].first][i].second << endl;
                             break;
                             }
