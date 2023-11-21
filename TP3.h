@@ -61,45 +61,44 @@ class weighted_graph{
             int max_flow = 0;
 
             vector<pair<int, int>> parent(this-> num_vertices);
-            while (bfs(s,t,rGraph,parent))
-            {
-                int minResCap = MRC(s,t, parent);
-                max_flow += minResCap;
-                int start = t;
-                
-                //UPDATE DA CAPACIDADE DAS ARESTAS
-                while (parent[start].first != start)
+            for(int c = 1 << 30; c > 0; c >>= 1){
+                while (bfs(s,t,rGraph,parent))
                 {
-                    //cout << "pai vertice: "<< parent[start].first << endl;
-                    for(int i = 0 ; i < rGraph[parent[start].first].size(); i++){
-                        if(rGraph[parent[start].first][i].first == start){
-                            //cout << "cap antes: " << rGraph[parent[start].first][i].second << endl;
-                            rGraph[parent[start].first][i].second -= minResCap;
-                            //if(rGraph[parent[start].first][i].second < 0) cout << "negativo" << endl;
-                            //cout << "cap despois: " << rGraph[parent[start].first][i].second << endl;
-                            break;
-                            }
-                    }
+                    int minResCap = MRC(s,t, parent);
+                    max_flow += minResCap;
+                    int start = t;
+                    
+                    //UPDATE DA CAPACIDADE DAS ARESTAS
+                    while (parent[start].first != start)
+                    {
+                        //cout << "pai vertice: "<< parent[start].first << endl;
+                        for(int i = 0 ; i < rGraph[parent[start].first].size(); i++){
+                            if(rGraph[parent[start].first][i].first == start){
+                                //cout << "cap antes: " << rGraph[parent[start].first][i].second << endl;
+                                rGraph[parent[start].first][i].second -= minResCap;
+                                //if(rGraph[parent[start].first][i].second < 0) cout << "negativo" << endl;
+                                //cout << "cap despois: " << rGraph[parent[start].first][i].second << endl;
+                                break;
+                                }
+                        }
 
-                    for(int i = 0 ; i < rGraph[start].size(); i++){
-                        if(rGraph[parent[start].first][i].first == start){
-                            //cout << "cap antes: " << rGraph[start][i].second << endl;
-                            rGraph[start][i].second += minResCap;
-                            //cout << "cap despois: " << rGraph[start][i].second << endl;
-                            break;
-                            }
-                    }
+                        for(int i = 0 ; i < rGraph[start].size(); i++){
+                            if(rGraph[parent[start].first][i].first == start){
+                                //cout << "cap antes: " << rGraph[start][i].second << endl;
+                                rGraph[start][i].second += minResCap;
+                                //cout << "cap despois: " << rGraph[start][i].second << endl;
+                                break;
+                                }
+                        }
 
-                    start = parent[start].first;
-                    // for(auto a : rGraph){
-                    //     for(auto b : a)
-                    //         cout << b.first << " " << b.second << " ;"<< " ";
-                    //     cout << endl;
-                    // }
+                        start = parent[start].first;
+                        // for(auto a : rGraph){
+                        //     for(auto b : a)
+                        //         cout << b.first << " " << b.second << " ;"<< " ";
+                        //     cout << endl;
+                        // }
+                    }
                 }
-
-
-
             }
 
             return max_flow;
@@ -192,9 +191,7 @@ class weighted_graph{
         //Usado no Ford_Fulkerson para encontrar caminhos aumentantes
         bool bfs(int s, int t, vector<vector<pair<int,int>>> &rGraph, vector<pair<int,int>> &parent){
             
-            vector<bool> visited(this->num_vertices,false);
             fill(parent.begin(), parent.end(), make_pair(-1,-1));
-            visited[s] = true;
             parent[s].first = s;
             parent[s].second = 0;
             queue<int> fila;
@@ -207,10 +204,9 @@ class weighted_graph{
 
                 for(auto viz : rGraph[atual]){
                     int vizinho = viz.first; int cap = viz.second;
-                    if(visited[vizinho] || cap <= 0) continue;
+                    if(parent[vizinho].first != -1 || cap <= 0) continue;
                     //cout << vizinho << endl;
                     fila.push(vizinho);
-                    visited[vizinho] = true;
                     parent[vizinho].first = atual;
                     parent[vizinho].second = cap;
                     if(vizinho == t){return true;}
@@ -246,9 +242,7 @@ class weighted_graph{
         }
 
         bool bfs_map(int s, int t, int minCap, vector<map<int,int>> &rGraph, vector<pair<int,int>> &parent){
-            vector<bool> visited(this->num_vertices,false);
             fill(parent.begin(), parent.end(), make_pair(-1,-1));
-            visited[s] = true;
             parent[s].first = s;
             parent[s].second = 0;
             queue<int> fila;
@@ -260,10 +254,8 @@ class weighted_graph{
                 fila.pop();
 
                 for(auto [vizinho, cap] : rGraph[atual]){
-                    if(visited[vizinho] || cap < minCap ) continue;
-                    //cout << vizinho << endl;
+                    if(parent[vizinho].first != -1 || cap < minCap ) continue;
                     fila.push(vizinho);
-                    visited[vizinho] = true;
                     parent[vizinho].first = atual;
                     parent[vizinho].second = cap;
                     if(vizinho == t){return true;}
