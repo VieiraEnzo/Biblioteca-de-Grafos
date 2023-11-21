@@ -1,3 +1,4 @@
+#include "bits/stdc++.h"
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -104,6 +105,24 @@ class weighted_graph{
             return max_flow;
         }
 
+        
+        int Dinitz(int s, int t){
+            int flow = 0; q[0] = s;
+            for (int L = 0; L < 31; ++L) do {
+                lvl = ptr = vector<int>(q.size());
+                int qi = 0, qe = lvl[s] = 1;
+                while (qi < qe && !lvl[t]) {
+                    int v = q[qi++];
+                    for (edge_t &e : adj[v])
+                        if (!lvl[e.to] && (e.c - e.f) >> (30 - L))
+                            q[qe++] = e.to, lvl[e.to] = lvl[v] + 1;
+                }
+                while(int p =dfs(s, t, numeric_limits<int>::max()/4))flow+=p;
+            } while (lvl[t]);
+            return flow;
+        }
+
+
     protected:
         string graph_name = "Graph";;
         bool negative_weights = false;
@@ -111,6 +130,11 @@ class weighted_graph{
         int num_arestas = -1;
         vector<int> arestas;
         bool directed = false;
+        
+        
+        vector<int> lvl, ptr, q;
+        struct edge_t { int to, rev; int c, f; };
+        vector<vector<edge_t>> adj;
         
 
         //Após sabermos o número de vértices, atualiza a estrutura
@@ -164,7 +188,20 @@ class weighted_graph{
             return CapMin;
         }
 
-};
+        //used in dinitz
+        int dfs(int v, int t, int f) {
+            if (v == t || !f) return f;
+            for (int &i = ptr[v]; i < int(adj[v].size()); ++i) {
+                edge_t &e = adj[v][i];
+                if (lvl[e.to] == lvl[v] + 1)
+                    if (int p = dfs(e.to, t, min(f, e.c - e.f))) {
+                        e.f += p, adj[e.to][e.rev].f -= p;
+                        return p;
+                    }
+            } return 0;
+        }
+
+    };
 
 
 //Representação usando vetor de adjascencia
@@ -187,12 +224,21 @@ class weighted_vector: public weighted_graph{
         //Após sabermos o número de vértices, atualiza a estrutura
         void atualizar_estrutura() override {
             arestas.resize(num_vertices);
+
+            adj.resize(num_vertices);
+            lvl.resize(num_vertices);
+            ptr.resize(num_vertices);
+            q.resize(num_vertices);
         }
 
         //Insere arestas dependendo da respresentação, levando em conta a direção do grafo
         void criar_aresta(int n1, int n2, int n3) override {
             arestas[n1].push_back(make_pair(n2,n3));
+
             if(directed) arestas[n2].push_back(make_pair(n1,n3));
+
+            adj[n1].push_back({n2, (int)adj[n2].size(), n3, 0});
+            adj[n2].push_back({n1, (int)adj[n1].size()-1, 0, 0});
         }
 
         //retorna um ponteiro para o vetor com os vizinhos de vert
