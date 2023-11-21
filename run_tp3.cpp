@@ -19,7 +19,7 @@ void runEx(){
             double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
             double elapsed2 = (end_time2 - end_time)/(double)CLOCKS_PER_SEC;
             sum += elapsed;
-            sum2 += elapsed;
+            sum2 += elapsed2;
         }
         file << sum/10 << "\n";
         file << result << "\n\n";

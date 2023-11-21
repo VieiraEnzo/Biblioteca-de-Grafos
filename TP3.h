@@ -105,6 +105,42 @@ class weighted_graph{
             return max_flow;
         }
 
+        int Ford_Fulkerson_map(int s, int t, bool wrtite = false, string path_out = "./"){
+                    //creates a residual graph
+                    vector<map<int,int>> rGraph(this->num_vertices);
+                    for(int i = 0; i < this->num_vertices; i++){
+                        for(auto vert: get_vizinhos(i)){
+                            // rGraph[i].push_back(make_pair(vert.first, vert.second));
+                            // rGraph[vert.first].push_back(make_pair(i, 0));
+                            rGraph[i][vert.first] = vert.second;
+                        }
+                    }
+                    int max_flow = 0;
+
+                    vector<pair<int, int>> parent(this-> num_vertices);
+                    for(int c = 1 << 30; c > 0; c >>= 1){
+                        while (bfs_map(s,t,c,rGraph,parent))
+                        {
+                            int minResCap = MRC(s,t, parent);
+                            max_flow += minResCap;
+                            int start = t;
+                            
+                            //UPDATE DA CAPACIDADE DAS ARESTAS
+                            while (start != s)
+                            {
+                                int next = parent[start].first;
+
+                                rGraph[next][start] -= minResCap;
+                                if(rGraph[next][start] == 0) rGraph[next].erase(start);
+                                rGraph[start][next] += minResCap;
+
+                                start = parent[start].first;
+                            }
+                        }
+                    }
+
+                    return max_flow;
+                }
         
         int Dinitz(int s, int t){
             int flow = 0; q[0] = s;
@@ -200,6 +236,35 @@ class weighted_graph{
                     }
             } return 0;
         }
+
+        bool bfs_map(int s, int t, int minCap, vector<map<int,int>> &rGraph, vector<pair<int,int>> &parent){
+            vector<bool> visited(this->num_vertices,false);
+            fill(parent.begin(), parent.end(), make_pair(-1,-1));
+            visited[s] = true;
+            parent[s].first = s;
+            parent[s].second = 0;
+            queue<int> fila;
+            fila.push(s);
+
+            while (!fila.empty())
+            {
+                int atual = fila.front();
+                fila.pop();
+
+                for(auto [vizinho, cap] : rGraph[atual]){
+                    if(visited[vizinho] || cap < minCap ) continue;
+                    //cout << vizinho << endl;
+                    fila.push(vizinho);
+                    visited[vizinho] = true;
+                    parent[vizinho].first = atual;
+                    parent[vizinho].second = cap;
+                    if(vizinho == t){return true;}
+                }
+            }
+
+            return false;
+        }
+
 
     };
 
