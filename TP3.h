@@ -190,7 +190,7 @@ class weighted_graph{
         virtual vector<pair<int,int>>& get_vizinhos(int vert) = 0;
 
         //Usado no Ford_Fulkerson para encontrar caminhos aumentantes
-        bool bfs(int s, int t, vector<vector<pair<int,int>>> rGraph, vector<pair<int,int>> &parent){
+        bool bfs(int s, int t, vector<vector<pair<int,int>>> &rGraph, vector<pair<int,int>> &parent){
             
             vector<bool> visited(this->num_vertices,false);
             fill(parent.begin(), parent.end(), make_pair(-1,-1));
@@ -221,7 +221,7 @@ class weighted_graph{
         }
 
         //find minimal residual capacity of a path
-        int MRC(int s, int t, vector<pair<int,int>> parent){
+        int MRC(int s, int t, vector<pair<int,int>> &parent){
             int start = t; int CapMin = 1e9;
             while (start != s)
             {
