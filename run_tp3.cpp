@@ -8,9 +8,10 @@ void runEx(){
         weighted_vector g1("grafos_tp3/grafo_rf_"+ to_string(i) +".txt",false);
         file.open("Quest_1_" + to_string(i) + ".txt");
 
+        file << "Grafo " << i << ":\n";
         double sum = 0, sum2 = 0, sum3 = 0;
         int result, result2, result3;
-        for(int i =0; i < 10; i ++){
+        for(int j =0; j < 10; j++){
             clock_t start_time = clock();
             result = g1.Ford_Fulkerson(1,2);
             clock_t end_time = clock();
@@ -24,7 +25,10 @@ void runEx(){
             sum += elapsed;
             sum2 += elapsed2;
             sum3 += elapsed3;
+
+            file << j << ": " << elapsed << ' ' << elapsed2 << ' ' << elapsed3 << '\n';
         }
+        file << "finais:\n";
         file << sum/10 << "\n";
         file << result << "\n\n";
         file << sum2/10 << '\n';

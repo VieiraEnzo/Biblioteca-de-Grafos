@@ -62,7 +62,7 @@ class weighted_graph{
 
             vector<pair<int, int>> parent(this-> num_vertices);
             for(int c = 1 << 30; c > 0; c >>= 1){
-                while (bfs(s,t,rGraph,parent))
+                while (bfs(s,t,c,rGraph,parent))
                 {
                     int minResCap = MRC(s,t, parent);
                     max_flow += minResCap;
@@ -189,7 +189,7 @@ class weighted_graph{
         virtual vector<pair<int,int>>& get_vizinhos(int vert) = 0;
 
         //Usado no Ford_Fulkerson para encontrar caminhos aumentantes
-        bool bfs(int s, int t, vector<vector<pair<int,int>>> &rGraph, vector<pair<int,int>> &parent){
+        bool bfs(int s, int t, int minCap, vector<vector<pair<int,int>>> &rGraph, vector<pair<int,int>> &parent){
             
             fill(parent.begin(), parent.end(), make_pair(-1,-1));
             parent[s].first = s;
@@ -204,7 +204,7 @@ class weighted_graph{
 
                 for(auto viz : rGraph[atual]){
                     int vizinho = viz.first; int cap = viz.second;
-                    if(parent[vizinho].first != -1 || cap <= 0) continue;
+                    if(parent[vizinho].first != -1 || cap < minCap) continue;
                     //cout << vizinho << endl;
                     fila.push(vizinho);
                     parent[vizinho].first = atual;
