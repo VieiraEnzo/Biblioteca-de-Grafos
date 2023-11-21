@@ -19,6 +19,7 @@ void runEx(){
             double elapsed = (end_time - start_time)/(double)CLOCKS_PER_SEC;
             double elapsed2 = (end_time2 - end_time)/(double)CLOCKS_PER_SEC;
             sum += elapsed;
+            sum2 += elapsed;
         }
         file << sum/10 << "\n";
         file << result << "\n\n";
@@ -30,14 +31,14 @@ void runEx(){
     }
 }
 
-void runT(){
-
-}
 
 
 int main()
 {
     runEx();
+    //weighted_vector g1("grafos_tp3/grafo_rf_"+ to_string(1) +".txt", true);
+    //cout << g1.Ford_Fulkerson(1,2) << endl;
+
 
         
 }

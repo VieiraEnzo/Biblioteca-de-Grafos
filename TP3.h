@@ -163,7 +163,7 @@ class weighted_graph{
 
                 for(auto viz : rGraph[atual]){
                     int vizinho = viz.first; int cap = viz.second;
-                    if(visited[vizinho] || cap == 0) continue;
+                    if(visited[vizinho] || cap <= 0) continue;
                     //cout << vizinho << endl;
                     fila.push(vizinho);
                     visited[vizinho] = true;
@@ -179,7 +179,7 @@ class weighted_graph{
         //find minimal residual capacity of a path
         int MRC(int s, int t, vector<pair<int,int>> parent){
             int start = t; int CapMin = 1e9;
-            while (parent[start].first != s)
+            while (start != s)
             {
                 CapMin = min(CapMin, parent[start].second);
                 start = parent[start].first;
