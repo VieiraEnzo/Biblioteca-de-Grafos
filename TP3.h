@@ -143,6 +143,16 @@ class weighted_graph{
                 }
         
         int Dinitz(int s, int t){
+            vector<vector<edge_t>> adj(this->num_vertices);
+            vector<int> lvl(this->num_vertices), ptr(this->num_vertices), q(this->num_vertices);
+
+            for(int n1 = 0; n1 < this->num_vertices; n1++){
+                for(auto [n2, n3] : get_vizinhos(n1)){
+                    adj[n1].push_back({n2, (int)adj[n2].size(), n3, 0});
+                    adj[n2].push_back({n1, (int)adj[n1].size()-1, 0, 0});
+                }
+            }
+
             int flow = 0; q[0] = s;
             for (int L = 0; L < 31; ++L) do {
                 lvl = ptr = vector<int>(q.size());
@@ -153,7 +163,7 @@ class weighted_graph{
                         if (!lvl[e.to] && (e.c - e.f) >> (30 - L))
                             q[qe++] = e.to, lvl[e.to] = lvl[v] + 1;
                 }
-                while(int p =dfs(s, t, numeric_limits<int>::max()/4))flow+=p;
+                while(int p =dfs(s, t, numeric_limits<int>::max()/4, adj, lvl, ptr))flow+=p;
             } while (lvl[t]);
             return flow;
         }
@@ -168,9 +178,7 @@ class weighted_graph{
         bool directed = false;
         
         
-        vector<int> lvl, ptr, q;
         struct edge_t { int to, rev; int c, f; };
-        vector<vector<edge_t>> adj;
         
 
         //Após sabermos o número de vértices, atualiza a estrutura
@@ -225,12 +233,12 @@ class weighted_graph{
         }
 
         //used in dinitz
-        int dfs(int v, int t, int f) {
+        int dfs(int v, int t, int f, vector<vector<edge_t>> &adj, vector<int> &lvl, vector<int> &ptr) {
             if (v == t || !f) return f;
             for (int &i = ptr[v]; i < int(adj[v].size()); ++i) {
                 edge_t &e = adj[v][i];
                 if (lvl[e.to] == lvl[v] + 1)
-                    if (int p = dfs(e.to, t, min(f, e.c - e.f))) {
+                    if (int p = dfs(e.to, t, min(f, e.c - e.f), adj, lvl, ptr)) {
                         e.f += p, adj[e.to][e.rev].f -= p;
                         return p;
                     }
@@ -289,11 +297,6 @@ class weighted_vector: public weighted_graph{
         //Após sabermos o número de vértices, atualiza a estrutura
         void atualizar_estrutura() override {
             arestas.resize(num_vertices);
-
-            adj.resize(num_vertices);
-            lvl.resize(num_vertices);
-            ptr.resize(num_vertices);
-            q.resize(num_vertices);
         }
 
         //Insere arestas dependendo da respresentação, levando em conta a direção do grafo
@@ -301,9 +304,6 @@ class weighted_vector: public weighted_graph{
             arestas[n1].push_back(make_pair(n2,n3));
 
             if(directed) arestas[n2].push_back(make_pair(n1,n3));
-
-            adj[n1].push_back({n2, (int)adj[n2].size(), n3, 0});
-            adj[n2].push_back({n1, (int)adj[n1].size()-1, 0, 0});
         }
 
         //retorna um ponteiro para o vetor com os vizinhos de vert
