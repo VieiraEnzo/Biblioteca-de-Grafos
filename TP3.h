@@ -36,7 +36,6 @@ class weighted_graph{
                     int n1 = stoi(line.substr(0, line.find_first_of(" ")));
                     int n2 = stoi(line.substr(line.find_first_of(" ") +1 , line.find_last_of(" ")));
                     int n3 = stoi(line.substr(line.find_last_of(" ")+1));
-                    if(n3 < 0) this->negative_weights = true;
                     criar_aresta(n1,n2,n3);
                     this->num_arestas++;
                 }
@@ -45,7 +44,6 @@ class weighted_graph{
             
             else throw std::invalid_argument( "Impossivel abrir o arquivo" );
         }
-
 
         // retornar o valor do fluxo e a alocação de fluxo em cada aresta, com uma opção de armazenar o resultado em disco
         int Ford_Fulkerson(int s, int t, bool write = false, string path_out = "./"){
@@ -169,8 +167,7 @@ class weighted_graph{
 
 
     protected:
-        string graph_name = "Graph";;
-        bool negative_weights = false;
+        string graph_name = "Graph";
         int num_vertices = -1;
         int num_arestas = -1;
         vector<int> arestas;
