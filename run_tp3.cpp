@@ -46,9 +46,11 @@ void runEx(){
 int main()
 {
     runEx();
-    //weighted_vector g1("grafos_tp3/grafo_rf_"+ to_string(1) +".txt", true);
+    // weighted_vector g1("grafos_tp3/grafo_rf_"+ to_string(5) +".txt", true);
     //cout << g1.Dinitz(1,2) << endl;
-
-
+    // cout << g1.Ford_Fulkerson(0, 3, true, "Exemplo") << '\n';
+    // cout << g1.Ford_Fulkerson(1,2) << '\n';
+    // cout << g1.Ford_Fulkerson_map(1,2) << '\n';
+    // cout << g1.Dinitz(1, 2) << '\n';
         
 }

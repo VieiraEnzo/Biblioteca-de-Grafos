@@ -55,7 +55,6 @@ class weighted_graph{
             for(int i = 0; i < this->num_vertices; i++){
                 for(auto vert: get_vizinhos(i)){
                     rGraph[i].push_back(make_pair(vert.first, vert.second));
-                    rGraph[vert.first].push_back(make_pair(i, 0));
                 }
             }
             int max_flow = 0;
@@ -101,45 +100,63 @@ class weighted_graph{
                 }
             }
 
+            if(write){
+                ofstream file;
+                file.open(path_out + ".txt");
+
+                for(int i = 0; i < this->num_vertices; i++){
+                    int j = 0;
+                    for(auto [viz, val] : get_vizinhos(i)){
+                        for(; j < rGraph[i].size(); j++){
+                            if(rGraph[i][j].first != viz) continue;
+                            file << "Arestas: " << i << ' ' << rGraph[i][j].first << ". Fluxo: " << val - rGraph[i][j].second << '\n';
+                            break; 
+                        }
+                    }
+                }
+                
+                file.close();
+            }
+
             return max_flow;
         }
 
         int Ford_Fulkerson_map(int s, int t, bool wrtite = false, string path_out = "./"){
-                    //creates a residual graph
-                    vector<map<int,int>> rGraph(this->num_vertices);
-                    for(int i = 0; i < this->num_vertices; i++){
-                        for(auto vert: get_vizinhos(i)){
-                            // rGraph[i].push_back(make_pair(vert.first, vert.second));
-                            // rGraph[vert.first].push_back(make_pair(i, 0));
-                            rGraph[i][vert.first] = vert.second;
-                        }
-                    }
-                    int max_flow = 0;
-
-                    vector<pair<int, int>> parent(this-> num_vertices);
-                    for(int c = 1 << 30; c > 0; c >>= 1){
-                        while (bfs_map(s,t,c,rGraph,parent))
-                        {
-                            int minResCap = MRC(s,t, parent);
-                            max_flow += minResCap;
-                            int start = t;
-                            
-                            //UPDATE DA CAPACIDADE DAS ARESTAS
-                            while (start != s)
-                            {
-                                int next = parent[start].first;
-
-                                rGraph[next][start] -= minResCap;
-                                if(rGraph[next][start] == 0) rGraph[next].erase(start);
-                                rGraph[start][next] += minResCap;
-
-                                start = parent[start].first;
-                            }
-                        }
-                    }
-
-                    return max_flow;
+            //creates a residual graph
+            vector<map<int,int>> rGraph(this->num_vertices);
+            for(int i = 0; i < this->num_vertices; i++){
+                for(auto vert: get_vizinhos(i)){
+                    // rGraph[i].push_back(make_pair(vert.first, vert.second));
+                    // rGraph[vert.first].push_back(make_pair(i, 0));
+                    rGraph[i][vert.first] += vert.second;
                 }
+            }
+            int max_flow = 0;
+
+            vector<pair<int, int>> parent(this-> num_vertices);
+            for(int c = 1 << 30; c > 0; c >>= 1){
+                while (bfs_map(s,t,c,rGraph,parent))
+                {
+                    int minResCap = MRC(s,t, parent);
+                    max_flow += minResCap;
+                    int start = t;
+                    
+                    //UPDATE DA CAPACIDADE DAS ARESTAS
+                    while (start != s)
+                    {
+                        int next = parent[start].first;
+
+                        rGraph[next][start] -= minResCap;
+                        if(rGraph[next][start] == 0) rGraph[next].erase(start);
+                        rGraph[start][next] += minResCap;
+
+                        start = parent[start].first;
+                    }
+                }
+            }
+
+            return max_flow;
+        }
         
         int Dinitz(int s, int t){
             vector<vector<edge_t>> adj(this->num_vertices);
@@ -295,7 +312,10 @@ class weighted_vector: public weighted_graph{
         void criar_aresta(int n1, int n2, int n3) override {
             arestas[n1].push_back(make_pair(n2,n3));
 
-            if(directed) arestas[n2].push_back(make_pair(n1,n3));
+            // if(directed) arestas[n2].push_back(make_pair(n1,n3));
+
+            if(directed) arestas[n2].push_back(make_pair(n1,0));
+            else arestas[n2].push_back(make_pair(n1,n3));
         }
 
         //retorna um ponteiro para o vetor com os vizinhos de vert
