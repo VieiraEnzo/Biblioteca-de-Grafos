@@ -126,6 +126,7 @@ class weighted_graph{
                 for(auto vert: get_vizinhos(i)){
                     // rGraph[i].push_back(make_pair(vert.first, vert.second));
                     // rGraph[vert.first].push_back(make_pair(i, 0));
+                    if(vert.second == 0) continue;
                     rGraph[i][vert.first] += vert.second;
                 }
             }
@@ -162,6 +163,7 @@ class weighted_graph{
 
             for(int n1 = 0; n1 < this->num_vertices; n1++){
                 for(auto [n2, n3] : get_vizinhos(n1)){
+                    if(n3 == 0) continue;
                     adj[n1].push_back({n2, (int)adj[n2].size(), n3, 0});
                     adj[n2].push_back({n1, (int)adj[n1].size()-1, 0, 0});
                 }
